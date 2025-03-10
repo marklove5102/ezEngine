@@ -298,8 +298,6 @@ void ezLensFlareComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) c
 
     ezLensFlareRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezLensFlareRenderData>(GetOwner());
     {
-      pRenderData->m_GlobalTransform = globalTransform;
-      pRenderData->m_GlobalBounds = globalBounds;
       pRenderData->m_hTexture = element.m_hTexture;
       pRenderData->m_Color = color.GetAsVec4();
       pRenderData->m_fSize = element.m_fSize * fScale;

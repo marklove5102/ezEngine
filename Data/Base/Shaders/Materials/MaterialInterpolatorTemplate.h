@@ -33,6 +33,10 @@ struct STAGE_TEMPLATE
 #  endif
 #endif
 
+#if defined(USE_DATAOFFSETS)
+  nointerpolation uint3 DataOffsets : DATAOFFSETS;
+#endif
+
 #if defined(CUSTOM_INTERPOLATOR)
   CUSTOM_INTERPOLATOR
 #endif

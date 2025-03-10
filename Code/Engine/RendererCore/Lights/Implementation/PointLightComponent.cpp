@@ -127,7 +127,6 @@ void ezPointLightComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) 
 
   auto pRenderData = ezCreateRenderDataForThisFrame<ezPointLightRenderData>(GetOwner());
 
-  pRenderData->m_GlobalTransform = t;
   pRenderData->m_LightColor = GetEffectiveColor();
   pRenderData->m_fIntensity = m_fIntensity;
   pRenderData->m_fSpecularMultiplier = m_fSpecularMultiplier;

@@ -53,7 +53,12 @@ private:
   {
     ezDynamicArray<ezRenderDataBatch> m_Batches;
     ezDynamicArray<ezRenderDataBatch::SortableRenderData> m_SortableRenderData;
+
+    ezDynamicArray<ezRenderData::DataOffsets> m_DataOffsets;
+    ezGALBufferHandle m_hDataOffsetsBuffer;
   };
+
+  void SortAndBatchCategory(DataPerCategory& dataPerCategory);
 
   ezCamera m_Camera;
   ezCamera m_LodCamera; // Temporary until we have a real LOD system

@@ -1285,6 +1285,8 @@ void ezJoltBreakableSlabComponent::OnMsgPhysicCharacterContact(ezMsgPhysicCharac
 
 void ezJoltBreakableSlabComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) const
 {
+  // TODO(idr)
+  #if 0
   m_bSkinningUpdated[0] = false;
   m_bSkinningUpdated[1] = false;
 
@@ -1349,6 +1351,7 @@ void ezJoltBreakableSlabComponent::OnMsgExtractRenderData(ezMsgExtractRenderData
       msg.AddRenderData(pRenderData, category, ezRenderData::Caching::IfStatic);
     }
   }
+  #endif
 }
 
 void ezJoltBreakableSlabComponent::DebugDraw()

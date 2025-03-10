@@ -11,6 +11,7 @@
 #include <RendererCore/Material/MaterialResource.h>
 #include <RendererCore/Meshes/CustomMeshComponent.h>
 #include <RendererCore/Meshes/DynamicMeshBufferResource.h>
+#include <RendererCore/RenderWorld/RenderWorldModule.h>
 
 // clang-format off
 EZ_BEGIN_STATIC_REFLECTED_BITFLAGS(ezJoltClothSheetFlags, 1)
@@ -126,6 +127,8 @@ void ezJoltClothSheetComponent::OnSimulationStarted()
 
 void ezJoltClothSheetComponent::OnDeactivated()
 {
+  ezRenderWorldModule::EnsureInstanceDataIsDeallocated(this, m_uiInstanceDataOffset);
+
   RemoveBody();
 
   ezJoltWorldModule* pModule = GetWorld()->GetModule<ezJoltWorldModule>();
@@ -160,17 +163,23 @@ void ezJoltClothSheetComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& m
   if (!m_hDynamicMeshBuffer.IsValid())
     return;
 
+  auto hInstanceDataBuffer = ezRenderWorldModule::EnsureInstanceDataIsAllocatedAndFill(this, m_uiInstanceDataOffset, GetUniqueIdForRendering(), m_Color);
+
   ezCustomMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezCustomMeshRenderData>(GetOwner());
   {
-    pRenderData->m_GlobalTransform = IsActiveAndSimulating() ? m_BodyGlobalTransform : GetOwner()->GetGlobalTransform();
-    pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
+    pRenderData->m_uiNumInstances = 1;
+    pRenderData->m_DataOffsets.m_uiInstance = m_uiInstanceDataOffset;
+    pRenderData->m_hInstanceDataBuffer = hInstanceDataBuffer;
+    pRenderData->m_fSortingDepthOffset = 0.0f;
+
     pRenderData->m_hMaterial = m_hMaterial;
-    pRenderData->m_Color = m_Color;
-    pRenderData->m_uiSubMeshIndex = 0;
-    pRenderData->m_uiUniqueID = GetUniqueIdForRendering();
     pRenderData->m_hDynamicMeshBuffer = m_hDynamicMeshBuffer;
     pRenderData->m_uiFirstPrimitive = 0;
     pRenderData->m_uiNumPrimitives = (m_vNumVertices.x - 1) * (m_vNumVertices.y - 1) * 2;
+
+#if EZ_ENABLED(EZ_COMPILE_FOR_DEVELOPMENT)
+    pRenderData->m_GlobalBoundingBox = GetOwner()->GetGlobalBounds().GetBox();
+#endif
 
     pRenderData->FillSortingKey();
   }

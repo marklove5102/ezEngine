@@ -53,7 +53,7 @@ void ezParticlePointRenderer::RenderBatch(const ezRenderViewContext& renderViewC
   }
 
   // now render all particle effects of type Point
-  for (auto it = batch.GetIterator<ezParticlePointRenderData>(0, batch.GetCount()); it.IsValid(); ++it)
+  for (auto it = batch.GetIterator<ezParticlePointRenderData>(0, batch.GetDataCount()); it.IsValid(); ++it)
   {
     const ezParticlePointRenderData* pRenderData = it;
 

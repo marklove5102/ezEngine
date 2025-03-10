@@ -152,6 +152,8 @@ void ezBoxReflectionProbeComponent::OnMsgExtractRenderData(ezMsgExtractRenderDat
     ezReflectionPool::UpdateReflectionProbe(GetWorld(), m_Id, m_Desc, this);
   }
 
+  #if 0
+
   auto pRenderData = ezCreateRenderDataForThisFrame<ezReflectionProbeRenderData>(GetOwner());
   pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
   pRenderData->m_vProbePosition = pRenderData->m_GlobalTransform * m_Desc.m_vCaptureOffset;
@@ -170,6 +172,7 @@ void ezBoxReflectionProbeComponent::OnMsgExtractRenderData(ezMsgExtractRenderDat
 
   float fPriority = ComputePriority(msg, pRenderData, fVolume, vScale);
   ezReflectionPool::ExtractReflectionProbe(this, msg, pRenderData, GetWorld(), m_Id, fPriority);
+  #endif
 }
 
 void ezBoxReflectionProbeComponent::OnTransformChanged(ezMsgTransformChanged& msg)

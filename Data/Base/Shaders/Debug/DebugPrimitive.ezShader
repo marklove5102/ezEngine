@@ -22,22 +22,34 @@ DepthTest = true
   DepthWrite = true
 #endif
 
-[VERTEXSHADER]
-
-#define USE_COLOR0
+[SHADER]
 
 #include <Shaders/Common/GlobalConstants.h>
-#include <Shaders/Materials/MaterialInterpolator.h>
+
+struct VS_IN
+{
+  float3 Position : POSITION;
+  float4 Color0 : COLOR0;
+  uint InstanceID : SV_InstanceID;
+};
+
+struct VS_OUT
+{
+  float4 Position : SV_Position;
+  float4 Color0 : COLOR0;
+};
+
+typedef VS_OUT PS_IN;
+
+[VERTEXSHADER]
 
 VS_OUT main(VS_IN Input)
 {
-  VS_OUT RetVal;
-  #if defined(CAMERA_MODE) && CAMERA_MODE == CAMERA_MODE_STEREO
-    s_ActiveCameraEyeIndex = Input.InstanceID % 2;
-    #if VERTEX_SHADER_RENDER_TARGET_ARRAY_INDEX == TRUE
-      RetVal.RenderTargetArrayIndex = Input.InstanceID % 2;
-    #endif
-  #endif
+#if CAMERA_MODE == CAMERA_MODE_STEREO
+  s_ActiveCameraEyeIndex = Input.InstanceID % 2;
+#endif
+
+  VS_OUT RetVal = (VS_OUT)0;
 
   #if PRE_TRANSFORMED_VERTICES
     float2 screenPosition = (Input.Position.xy * ViewportSize.zw) * float2(2.0, -2.0) + float2(-1.0, 1.0);
@@ -47,7 +59,6 @@ VS_OUT main(VS_IN Input)
   #endif
 
   RetVal.Color0 = Input.Color0;
-  RetVal.InstanceID = Input.InstanceID;
 
   return RetVal;
 }
@@ -59,12 +70,6 @@ VS_OUT main(VS_IN Input)
 #include <Shaders/Materials/StereoGeometryShader.h>
 
 [PIXELSHADER]
-
-#define USE_COLOR0
-
-
-#include <Shaders/Materials/MaterialInterpolator.h>
-#include <Shaders/Common/GlobalConstants.h>
 
 float4 main(PS_IN Input) : SV_Target
 {

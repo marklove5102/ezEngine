@@ -2,7 +2,6 @@
 
 #include <Foundation/Utilities/GraphicsUtils.h>
 #include <RendererCore/Meshes/InstancedMeshComponent.h>
-#include <RendererCore/Pipeline/InstanceDataProvider.h>
 #include <RendererCore/Utils/WorldGeoExtractionUtil.h>
 
 #include <Core/WorldSerializer/WorldReader.h>
@@ -137,14 +136,16 @@ void ezInstancedMeshComponentManager::OnRenderEvent(const ezRenderWorldRenderEve
     if (!TryGetComponent(componentToUpdate.m_hComponent, pComp))
       continue;
 
-    if (pComp->m_pExplicitInstanceData)
+    // TODO(idr)
+    EZ_ASSERT_NOT_IMPLEMENTED;
+    /*if (pComp->m_pExplicitInstanceData)
     {
       ezUInt32 uiOffset = 0;
       auto instanceData = pComp->m_pExplicitInstanceData->GetInstanceData(pRenderContext, componentToUpdate.m_InstanceData.GetCount(), uiOffset);
       instanceData.CopyFrom(componentToUpdate.m_InstanceData);
 
       pComp->m_pExplicitInstanceData->UpdateInstanceData(pRenderContext, instanceData.GetCount());
-    }
+    }*/
   }
 
   pRenderContext->EndCompute();
@@ -213,12 +214,12 @@ void ezInstancedMeshComponent::OnActivated()
   SUPER::OnActivated();
 
   EZ_ASSERT_DEV(m_pExplicitInstanceData == nullptr, "Instance data must not be initialized at this point");
-  m_pExplicitInstanceData = EZ_DEFAULT_NEW(ezInstanceData, 1024, false);
+  //m_pExplicitInstanceData = EZ_DEFAULT_NEW(ezInstanceData, 1024, false);
 }
 
 void ezInstancedMeshComponent::OnDeactivated()
 {
-  EZ_DEFAULT_DELETE(m_pExplicitInstanceData);
+  //EZ_DEFAULT_DELETE(m_pExplicitInstanceData);
   m_pExplicitInstanceData = nullptr;
 
   SUPER::OnDeactivated();

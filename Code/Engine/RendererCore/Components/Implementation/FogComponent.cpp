@@ -143,9 +143,9 @@ void ezFogComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) const
 
   auto pRenderData = ezCreateRenderDataForThisFrame<ezFogRenderData>(GetOwner());
 
-  pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
   pRenderData->m_Color = m_Color;
   pRenderData->m_fDensity = m_fDensity / 100.0f;
+  pRenderData->m_fBaseHeight = GetOwner()->GetGlobalTransform().m_vPosition.z;
   pRenderData->m_fHeightFalloff = m_fHeightFalloff;
   pRenderData->m_fInvSkyDistance = m_bModulateWithSkyColor ? 1.0f / m_fSkyDistance : 0.0f;
 

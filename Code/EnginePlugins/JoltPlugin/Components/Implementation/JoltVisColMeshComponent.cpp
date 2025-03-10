@@ -168,11 +168,9 @@ void ezJoltVisColMeshComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& m
     ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(GetOwner());
     {
       pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
-      pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
       pRenderData->m_hMesh = m_hMesh;
       pRenderData->m_hMaterial = hMaterial;
       pRenderData->m_uiSubMeshIndex = uiPartIndex;
-      pRenderData->m_uiUniqueID = GetUniqueIdForRendering(uiMaterialIndex);
 
       pRenderData->FillSortingKey();
     }

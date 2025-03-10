@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Core/World/World.h>
 #include <RendererCore/Components/RenderComponent.h>
 #include <RendererCore/Material/MaterialResource.h>
 #include <RendererCore/Meshes/MeshResource.h>
@@ -18,16 +17,13 @@ public:
   void FillSortingKey();
   virtual bool CanBatch(const ezRenderData& other) const override;
 
-  ezMeshResourceHandle m_hMesh;
   ezMaterialResourceHandle m_hMaterial;
-  ezColor m_Color = ezColor::White;
-  ezVec4 m_vCustomData = ezVec4(0, 1, 0, 1);
+  ezMeshResourceHandle m_hMesh;
+  ezUInt32 m_uiSubMeshIndex = 0;
 
-  ezUInt32 m_uiSubMeshIndex : 30;
-  ezUInt32 m_uiFlipWinding : 1;
-  ezUInt32 m_uiUniformScale : 1;
-
-  ezUInt32 m_uiUniqueID = 0;
+#if EZ_ENABLED(EZ_COMPILE_FOR_DEVELOPMENT)
+  ezBoundingBox m_GlobalBoundingBox;
+#endif
 };
 
 /// \brief This message is used to replace the material on a mesh.
@@ -57,6 +53,8 @@ class EZ_RENDERERCORE_DLL ezMeshComponentBase : public ezRenderComponent
   // ezComponent
 
 public:
+  virtual void OnDeactivated() override;
+
   virtual void SerializeComponent(ezWorldWriter& inout_stream) const override;
   virtual void DeserializeComponent(ezWorldReader& inout_stream) override;
 
@@ -116,8 +114,10 @@ protected:
   void OnMsgExtractRenderData(ezMsgExtractRenderData& msg) const;
 
   ezMeshResourceHandle m_hMesh;
-  ezDynamicArray<ezMaterialResourceHandle> m_Materials;
+  ezSmallArray<ezMaterialResourceHandle, 2> m_Materials;
   ezColor m_Color = ezColor::White;
   ezVec4 m_vCustomData = ezVec4(0, 1, 0, 1);
   float m_fSortingDepthOffset = 0.0f;
+
+  mutable ezUInt32 m_uiInstanceDataOffset = ezInvalidIndex;
 };

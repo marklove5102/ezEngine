@@ -197,6 +197,9 @@ void ezParticleTypeMesh::ExtractTypeRenderData(ezMsgExtractRenderData& ref_msg, 
       trans.m_vPosition = pPosition[idx].GetAsVec3();
       trans.m_vScale.Set(pSize[idx]);
 
+      // TODO(idr)
+      EZ_ASSERT_NOT_IMPLEMENTED;
+      /*
       ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(nullptr);
       {
         pRenderData->m_GlobalTransform = trans;
@@ -212,6 +215,7 @@ void ezParticleTypeMesh::ExtractTypeRenderData(ezMsgExtractRenderData& ref_msg, 
       }
 
       ref_msg.AddRenderData(pRenderData, m_RenderCategory, ezRenderData::Caching::Never);
+      */
     }
   }
 }

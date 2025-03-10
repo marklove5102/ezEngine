@@ -51,9 +51,29 @@ EZ_FORCE_INLINE const ezRenderer* ezRenderData::GetCategoryRenderer(Category cat
 
 //////////////////////////////////////////////////////////////////////////
 
+EZ_ALWAYS_INLINE bool ezRenderData::IsDynamic() const
+{
+  return m_Flags.IsSet(Flags::Dynamic);
+}
+
+EZ_ALWAYS_INLINE bool ezRenderData::IsStatic() const
+{
+  return !m_Flags.IsSet(Flags::Dynamic);
+}
+
+EZ_ALWAYS_INLINE bool ezRenderData::FlipWinding() const
+{
+  return m_Flags.IsSet(Flags::FlipWinding);
+}
+
 EZ_FORCE_INLINE ezUInt64 ezRenderData::GetFinalSortingKey(Category category, const ezCamera& camera) const
 {
   return s_CategoryData[category.m_uiValue].m_sortingKeyFunc(this, camera);
+}
+
+EZ_FORCE_INLINE bool ezRenderData::CanBatchByBaseValues(const ezRenderData& other) const
+{
+  return FlipWinding() == other.FlipWinding() && m_hInstanceDataBuffer == other.m_hInstanceDataBuffer;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,6 +88,10 @@ static T* ezCreateRenderDataForThisFrame(const ezGameObject* pOwner)
   if (pOwner != nullptr)
   {
     pRenderData->m_Flags.AddOrRemove(ezRenderData::Flags::Dynamic, pOwner->IsDynamic());
+    pRenderData->m_Flags.AddOrRemove(ezRenderData::Flags::FlipWinding, pOwner->GetGlobalTransformSimd().HasMirrorScaling());
+
+    pRenderData->m_vGlobalPosition = pOwner->GetGlobalPosition();
+
     pRenderData->m_hOwner = pOwner->GetHandle();
   }
 

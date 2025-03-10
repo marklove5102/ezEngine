@@ -8,6 +8,7 @@
 #include <RendererCore/Material/MaterialResource.h>
 #include <RendererCore/Meshes/CustomMeshComponent.h>
 #include <RendererCore/Meshes/DynamicMeshBufferResource.h>
+#include <RendererCore/RenderWorld/RenderWorldModule.h>
 
 // clang-format off
 EZ_BEGIN_STATIC_REFLECTED_BITFLAGS(ezClothSheetFlags, 1)
@@ -50,7 +51,12 @@ EZ_END_DYNAMIC_REFLECTED_TYPE;
 // clang-format on
 
 ezClothSheetComponent::ezClothSheetComponent() = default;
-ezClothSheetComponent::~ezClothSheetComponent() = default;
+
+ezClothSheetComponent::~ezClothSheetComponent()
+{
+  const ezRenderWorldModule* pRenderWorldModule = GetWorld()->GetModule<ezRenderWorldModule>();
+  pRenderWorldModule->DeallocateInstanceData(this, m_uiInstanceDataOffset);
+}
 
 void ezClothSheetComponent::SetSize(ezVec2 vVal)
 {
@@ -117,6 +123,8 @@ void ezClothSheetComponent::OnSimulationStarted()
 
 void ezClothSheetComponent::OnDeactivated()
 {
+  ezRenderWorldModule::EnsureInstanceDataIsDeallocated(this, m_uiInstanceDataOffset);
+
   m_Simulator.m_Nodes.Clear();
 
   SUPER::OnDeactivated();
@@ -147,17 +155,23 @@ void ezClothSheetComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) 
   if (!m_hDynamicMeshBuffer.IsValid())
     return;
 
+  auto hInstanceDataBuffer = ezRenderWorldModule::EnsureInstanceDataIsAllocatedAndFill(this, m_uiInstanceDataOffset, GetUniqueIdForRendering(), m_Color);
+
   ezCustomMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezCustomMeshRenderData>(GetOwner());
   {
-    pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
-    pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
+    pRenderData->m_uiNumInstances = 1;
+    pRenderData->m_DataOffsets.m_uiInstance = m_uiInstanceDataOffset;
+    pRenderData->m_hInstanceDataBuffer = hInstanceDataBuffer;
+    pRenderData->m_fSortingDepthOffset = 0.0f;
+
     pRenderData->m_hMaterial = m_hMaterial;
-    pRenderData->m_Color = m_Color;
-    pRenderData->m_uiSubMeshIndex = 0;
-    pRenderData->m_uiUniqueID = GetUniqueIdForRendering();
     pRenderData->m_hDynamicMeshBuffer = m_hDynamicMeshBuffer;
     pRenderData->m_uiFirstPrimitive = 0;
     pRenderData->m_uiNumPrimitives = m_vSegments.x * m_vSegments.y * 2;
+
+#if EZ_ENABLED(EZ_COMPILE_FOR_DEVELOPMENT)
+    pRenderData->m_GlobalBoundingBox = GetOwner()->GetGlobalBounds().GetBox();
+#endif
 
     pRenderData->FillSortingKey();
   }

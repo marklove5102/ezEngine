@@ -228,10 +228,11 @@ void ezSpotLightComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) c
 
   auto pRenderData = ezCreateRenderDataForThisFrame<ezSpotLightRenderData>(GetOwner());
 
-  pRenderData->m_GlobalTransform = t;
   pRenderData->m_LightColor = GetEffectiveColor();
   pRenderData->m_fIntensity = m_fIntensity;
   pRenderData->m_fSpecularMultiplier = m_fSpecularMultiplier;
+
+  pRenderData->m_qGlobalRotation = t.m_qRotation;
   pRenderData->m_fRange = m_fEffectiveRange;
   pRenderData->m_InnerSpotAngle = m_InnerSpotAngle;
   pRenderData->m_OuterSpotAngle = m_OuterSpotAngle;

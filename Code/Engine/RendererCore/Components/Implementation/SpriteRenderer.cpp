@@ -44,7 +44,7 @@ void ezSpriteRenderer::RenderBatch(const ezRenderViewContext& renderViewContext,
 
   const ezSpriteRenderData* pRenderData = batch.GetFirstData<ezSpriteRenderData>();
 
-  const ezUInt32 uiBufferSize = ezMath::RoundUp(batch.GetCount(), 128u);
+  const ezUInt32 uiBufferSize = ezMath::RoundUp(batch.GetDataCount(), 128u);
   ezGALBufferHandle hSpriteData = CreateSpriteDataBuffer(uiBufferSize);
   EZ_SCOPE_EXIT(DeleteSpriteDataBuffer(hSpriteData));
 
@@ -86,7 +86,7 @@ void ezSpriteRenderer::DeleteSpriteDataBuffer(ezGALBufferHandle hBuffer) const
 void ezSpriteRenderer::FillSpriteData(const ezRenderDataBatch& batch) const
 {
   m_SpriteData.Clear();
-  m_SpriteData.Reserve(batch.GetCount());
+  m_SpriteData.Reserve(batch.GetDataCount());
 
   for (auto it = batch.GetIterator<ezSpriteRenderData>(); it.IsValid(); ++it)
   {
@@ -94,7 +94,7 @@ void ezSpriteRenderer::FillSpriteData(const ezRenderDataBatch& batch) const
 
     auto& spriteData = m_SpriteData.ExpandAndGetRef();
 
-    spriteData.WorldSpacePosition = pRenderData->m_GlobalTransform.m_vPosition;
+    spriteData.WorldSpacePosition = pRenderData->m_vGlobalPosition;
     spriteData.Size = pRenderData->m_fSize;
     spriteData.MaxScreenSize = pRenderData->m_fMaxScreenSize;
     spriteData.AspectRatio = pRenderData->m_fAspectRatio;

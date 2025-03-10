@@ -59,7 +59,7 @@ void ezParticleQuadRenderer::RenderBatch(const ezRenderViewContext& renderViewCo
   }
 
   // now render all particle effects of type Quad
-  for (auto it = batch.GetIterator<ezParticleQuadRenderData>(0, batch.GetCount()); it.IsValid(); ++it)
+  for (auto it = batch.GetIterator<ezParticleQuadRenderData>(0, batch.GetDataCount()); it.IsValid(); ++it)
   {
     const ezParticleQuadRenderData* pRenderData = it;
 

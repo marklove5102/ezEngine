@@ -179,31 +179,31 @@ void ezLodAnimatedMeshComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& 
 
     hMaterial = pMesh->GetMaterials()[uiMaterialIndex];
 
-    ezMeshRenderData* pRenderData = CreateRenderData();
-    {
-      pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform() * pRenderData->m_GlobalTransform;
-      pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
-      pRenderData->m_fSortingDepthOffset = m_fSortingDepthOffset;
-      pRenderData->m_hMesh = hMesh;
-      pRenderData->m_hMaterial = hMaterial;
-      pRenderData->m_Color = m_Color;
-      pRenderData->m_vCustomData = m_vCustomData;
-      pRenderData->m_uiSubMeshIndex = uiPartIndex;
-      pRenderData->m_uiUniqueID = GetUniqueIdForRendering(uiMaterialIndex);
+    //ezMeshRenderData* pRenderData = CreateRenderData();
+    //{
+    //  pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform() * pRenderData->m_GlobalTransform;
+    //  pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
+    //  pRenderData->m_fSortingDepthOffset = m_fSortingDepthOffset;
+    //  pRenderData->m_hMesh = hMesh;
+    //  pRenderData->m_hMaterial = hMaterial;
+    //  pRenderData->m_Color = m_Color;
+    //  pRenderData->m_vCustomData = m_vCustomData;
+    //  pRenderData->m_uiSubMeshIndex = uiPartIndex;
+    //  pRenderData->m_uiUniqueID = GetUniqueIdForRendering(uiMaterialIndex);
 
-      pRenderData->FillSortingKey();
-    }
+    //  pRenderData->FillSortingKey();
+    //}
 
-    // Determine render data category.
-    ezRenderData::Category category = ezDefaultRenderDataCategories::LitOpaque;
-    if (hMaterial.IsValid())
-    {
-      ezResourceLock<ezMaterialResource> pMaterial(hMaterial, ezResourceAcquireMode::AllowLoadingFallback);
+    //// Determine render data category.
+    //ezRenderData::Category category = ezDefaultRenderDataCategories::LitOpaque;
+    //if (hMaterial.IsValid())
+    //{
+    //  ezResourceLock<ezMaterialResource> pMaterial(hMaterial, ezResourceAcquireMode::AllowLoadingFallback);
 
-      category = pMaterial->GetRenderDataCategory();
-    }
+    //  category = pMaterial->GetRenderDataCategory();
+    //}
 
-    msg.AddRenderData(pRenderData, category, ezRenderData::Caching::Never);
+    //msg.AddRenderData(pRenderData, category, ezRenderData::Caching::Never);
   }
 }
 
@@ -322,7 +322,7 @@ void ezLodAnimatedMeshComponent::RetrievePose(ezDynamicArray<ezMat4>& out_modelT
 ezMeshRenderData* ezLodAnimatedMeshComponent::CreateRenderData() const
 {
   auto pRenderData = ezCreateRenderDataForThisFrame<ezSkinnedMeshRenderData>(GetOwner());
-  pRenderData->m_GlobalTransform = m_RootTransform;
+  //pRenderData->m_GlobalTransform = m_RootTransform;
 
   pRenderData->m_hSkinningTransforms = m_SkinningState.m_hGpuBuffer;
 

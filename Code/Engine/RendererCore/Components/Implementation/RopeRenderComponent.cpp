@@ -107,35 +107,35 @@ void ezRopeRenderComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) 
   ezResourceLock<ezMeshResource> pMesh(m_hMesh, ezResourceAcquireMode::AllowLoadingFallback);
   ezMaterialResourceHandle hMaterial = m_hMaterial.IsValid() ? m_hMaterial : pMesh->GetMaterials()[0];
 
-  ezSkinnedMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezSkinnedMeshRenderData>(GetOwner());
-  {
-    pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
-    pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
-    pRenderData->m_hMesh = m_hMesh;
-    pRenderData->m_hMaterial = hMaterial;
-    pRenderData->m_Color = m_Color;
+  //ezSkinnedMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezSkinnedMeshRenderData>(GetOwner());
+  //{
+  //  pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
+  //  pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
+  //  pRenderData->m_hMesh = m_hMesh;
+  //  pRenderData->m_hMaterial = hMaterial;
+  //  pRenderData->m_Color = m_Color;
 
-    pRenderData->m_uiSubMeshIndex = 0;
-    pRenderData->m_uiFlipWinding = uiFlipWinding;
-    pRenderData->m_uiUniformScale = uiUniformScale;
+  //  pRenderData->m_uiSubMeshIndex = 0;
+  //  pRenderData->m_uiFlipWinding = uiFlipWinding;
+  //  pRenderData->m_uiUniformScale = uiUniformScale;
 
-    pRenderData->m_uiUniqueID = GetUniqueIdForRendering();
+  //  pRenderData->m_uiUniqueID = GetUniqueIdForRendering();
 
-    pRenderData->m_hSkinningTransforms = m_SkinningState.m_hGpuBuffer;
+  //  pRenderData->m_hSkinningTransforms = m_SkinningState.m_hGpuBuffer;
 
-    pRenderData->FillSortingKey();
-  }
+  //  pRenderData->FillSortingKey();
+  //}
 
-  // Determine render data category.
-  ezRenderData::Category category = ezDefaultRenderDataCategories::LitOpaque;
+  //// Determine render data category.
+  //ezRenderData::Category category = ezDefaultRenderDataCategories::LitOpaque;
 
-  if (hMaterial.IsValid())
-  {
-    ezResourceLock<ezMaterialResource> pMaterial(hMaterial, ezResourceAcquireMode::AllowLoadingFallback);
-    category = pMaterial->GetRenderDataCategory();
-  }
+  //if (hMaterial.IsValid())
+  //{
+  //  ezResourceLock<ezMaterialResource> pMaterial(hMaterial, ezResourceAcquireMode::AllowLoadingFallback);
+  //  category = pMaterial->GetRenderDataCategory();
+  //}
 
-  msg.AddRenderData(pRenderData, category, ezRenderData::Caching::Never);
+  //msg.AddRenderData(pRenderData, category, ezRenderData::Caching::Never);
 
   if (cvar_FeatureRopesVisBones)
   {

@@ -2,9 +2,11 @@
 
 #include <ProcGenPlugin/Components/ProcVertexColorComponent.h>
 #include <ProcGenPlugin/Components/ProcVertexColorRenderer.h>
-#include <RendererCore/Meshes/Implementation/MeshRendererUtils.h>
 #include <RendererCore/Pipeline/RenderDataBatch.h>
 #include <RendererCore/RenderContext/RenderContext.h>
+
+#include <RendererCore/../../../Data/Base/Shaders/Common/ObjectConstants.h>
+
 
 // clang-format off
 EZ_BEGIN_DYNAMIC_REFLECTED_TYPE(ezProcVertexColorRenderer, 1, ezRTTIDefaultAllocator<ezProcVertexColorRenderer>)
@@ -32,25 +34,6 @@ void ezProcVertexColorRenderer::SetAdditionalData(const ezRenderViewContext& ren
     ezBindGroupBuilder& bindGroupDraw = renderViewContext.m_pRenderContext->GetBindGroup(EZ_GAL_BIND_GROUP_DRAW_CALL);
     bindGroupDraw.BindBuffer("perInstanceVertexColors", pVertexColorBuffer->GetBufferForRendering());
   }
-}
-
-void ezProcVertexColorRenderer::FillPerInstanceData(
-  ezArrayPtr<ezPerInstanceData> instanceData, const ezRenderDataBatch& batch, ezUInt32 uiStartIndex, ezUInt32& out_uiFilteredCount) const
-{
-  ezUInt32 uiCount = ezMath::Min<ezUInt32>(instanceData.GetCount(), batch.GetCount() - uiStartIndex);
-  ezUInt32 uiCurrentIndex = 0;
-
-  for (auto it = batch.GetIterator<ezProcVertexColorRenderData>(uiStartIndex, uiCount); it.IsValid(); ++it)
-  {
-    auto& perInstanceData = instanceData[uiCurrentIndex];
-
-    ezInternal::FillPerInstanceData(perInstanceData, it);
-    perInstanceData.VertexColorAccessData = it->m_uiBufferAccessData;
-
-    ++uiCurrentIndex;
-  }
-
-  out_uiFilteredCount = uiCurrentIndex;
 }
 
 

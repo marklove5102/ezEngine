@@ -266,7 +266,7 @@ void ezBakedProbesComponent::OnExtractRenderData(ezMsgExtractRenderData& ref_msg
     ezColor encodedSkyVisibility = ezColor::Black;
     encodedSkyVisibility.r = *reinterpret_cast<const float*>(&skyVisibility);
 
-    ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(pOwner);
+    /*ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(pOwner);
     {
       pRenderData->m_GlobalTransform = transform;
       pRenderData->m_GlobalBounds = ezBoundingBoxSphere::MakeInvalid();
@@ -279,7 +279,7 @@ void ezBakedProbesComponent::OnExtractRenderData(ezMsgExtractRenderData& ref_msg
       pRenderData->FillSortingKey();
     }
 
-    ref_msg.AddRenderData(pRenderData, ezDefaultRenderDataCategories::SimpleOpaque, caching);
+    ref_msg.AddRenderData(pRenderData, ezDefaultRenderDataCategories::SimpleOpaque, caching);*/
   };
 
   if (m_bUseTestPosition)

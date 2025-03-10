@@ -239,9 +239,9 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
       {
         const ezUInt32 uiLightIndex = m_TempLightData.GetCount();
 
-        if (uiLightIndex == ezClusteredDataCPU::MAX_LIGHT_DATA)
+        if (uiLightIndex == ezClusteredDataCPU::MAX_NUM_LIGHTS)
         {
-          ezLog::Warning("Maximum number of lights reached ({0}). Further lights will be discarded.", ezClusteredDataCPU::MAX_LIGHT_DATA);
+          ezLog::Warning("Maximum number of lights reached ({0}). Further lights will be discarded.", ezClusteredDataCPU::MAX_NUM_LIGHTS);
           break;
         }
 
@@ -249,7 +249,7 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
         {
           FillPointLightData(m_TempLightData.ExpandAndGetRef(), pPointLightRenderData);
 
-          ezSimdBSphere pointLightSphere = ezSimdBSphere(ezSimdConversion::ToVec3(pPointLightRenderData->m_GlobalTransform.m_vPosition), pPointLightRenderData->m_fRange);
+          ezSimdBSphere pointLightSphere = ezSimdBSphere(ezSimdConversion::ToVec3(pPointLightRenderData->m_vGlobalPosition), pPointLightRenderData->m_fRange);
           RasterizeSphere(pointLightSphere, uiLightIndex, viewMatrix, projectionMatrix, m_TempLightsClusters.GetData(), m_ClusterBoundingSpheres.GetData());
 
           if (false)
@@ -272,9 +272,9 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
           ezAngle halfAngle = pSpotLightRenderData->m_OuterSpotAngle / 2.0f;
 
           BoundingCone cone;
-          cone.m_PositionAndRange = ezSimdConversion::ToVec3(pSpotLightRenderData->m_GlobalTransform.m_vPosition);
+          cone.m_PositionAndRange = ezSimdConversion::ToVec3(pSpotLightRenderData->m_vGlobalPosition);
           cone.m_PositionAndRange.SetW(pSpotLightRenderData->m_fRange);
-          cone.m_ForwardDir = ezSimdConversion::ToVec3(pSpotLightRenderData->m_GlobalTransform.m_qRotation * ezVec3(1.0f, 0.0f, 0.0f));
+          cone.m_ForwardDir = ezSimdConversion::ToVec3(pSpotLightRenderData->m_qGlobalRotation * ezVec3(1.0f, 0.0f, 0.0f));
           cone.m_SinCosAngle = ezSimdVec4f(ezMath::Sin(halfAngle), ezMath::Cos(halfAngle), 0.0f);
           RasterizeSpotLight(cone, uiLightIndex, viewMatrix, projectionMatrix, m_TempLightsClusters.GetData(), m_ClusterBoundingSpheres.GetData());
         }
@@ -295,15 +295,15 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
         {
           FillFillLightData(m_TempLightData.ExpandAndGetRef(), pFillLightRenderData);
 
-          ezSimdBSphere fillLightSphere = ezSimdBSphere(ezSimdConversion::ToVec3(pFillLightRenderData->m_GlobalTransform.m_vPosition), pFillLightRenderData->m_fRange);
+          ezSimdBSphere fillLightSphere = ezSimdBSphere(ezSimdConversion::ToVec3(pFillLightRenderData->m_vGlobalPosition), pFillLightRenderData->m_fRange);
           RasterizeSphere(fillLightSphere, uiLightIndex, viewMatrix, projectionMatrix, m_TempLightsClusters.GetData(), m_ClusterBoundingSpheres.GetData());
         }
         else if (auto pFogRenderData = ezDynamicCast<const ezFogRenderData*>(it))
         {
-          float fogBaseHeight = pFogRenderData->m_GlobalTransform.m_vPosition.z;
+          const float fogBaseHeight = pFogRenderData->m_fBaseHeight;
           float fogHeightFalloff = pFogRenderData->m_fHeightFalloff > 0.0f ? ezMath::Ln(0.0001f) / pFogRenderData->m_fHeightFalloff : 0.0f;
 
-          float fogAtCameraPos = fogHeightFalloff * (pCamera->GetPosition().z - fogBaseHeight);
+          const float fogAtCameraPos = fogHeightFalloff * (pCamera->GetPosition().z - fogBaseHeight);
           if (fogAtCameraPos >= 80.0f) // Prevent infs
           {
             fogHeightFalloff = 0.0f;
@@ -347,9 +347,9 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
       {
         const ezUInt32 uiDecalIndex = m_TempDecalData.GetCount();
 
-        if (uiDecalIndex == ezClusteredDataCPU::MAX_DECAL_DATA)
+        if (uiDecalIndex == ezClusteredDataCPU::MAX_NUM_DECALS)
         {
-          ezLog::Warning("Maximum number of decals reached ({0}). Further decals will be discarded.", ezClusteredDataCPU::MAX_DECAL_DATA);
+          ezLog::Warning("Maximum number of decals reached ({0}). Further decals will be discarded.", ezClusteredDataCPU::MAX_NUM_DECALS);
           break;
         }
 
@@ -385,9 +385,9 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
       {
         const ezUInt32 uiProbeIndex = m_TempReflectionProbeData.GetCount();
 
-        if (uiProbeIndex == ezClusteredDataCPU::MAX_REFLECTION_PROBE_DATA)
+        if (uiProbeIndex == ezClusteredDataCPU::MAX_NUM_REFLECTION_PROBES)
         {
-          ezLog::Warning("Maximum number of reflection probes reached ({0}). Further reflection probes will be discarded.", ezClusteredDataCPU::MAX_REFLECTION_PROBE_DATA);
+          ezLog::Warning("Maximum number of reflection probes reached ({0}). Further reflection probes will be discarded.", ezClusteredDataCPU::MAX_NUM_REFLECTION_PROBES);
           break;
         }
 
@@ -396,6 +396,7 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
           auto& probeData = m_TempReflectionProbeData.ExpandAndGetRef();
           FillReflectionProbeData(probeData, pReflectionProbeRenderData);
 
+#if 0
           const ezVec3 vFullScale = pReflectionProbeRenderData->m_vHalfExtents.CompMul(pReflectionProbeRenderData->m_GlobalTransform.m_vScale);
 
           bool bRasterizeSphere = false;
@@ -411,6 +412,7 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
               bRasterizeSphere = true;
             }
           }
+
 
           if (bRasterizeSphere)
           {
@@ -430,6 +432,7 @@ void ezClusteredDataExtractor::PostSortAndBatch(const ezView& view, const ezDyna
 
             RasterizeBox(transform, uiProbeIndex, viewMatrix, viewProjectionMatrix, m_TempReflectionProbeClusters.GetData(), m_ClusterBoundingSpheres.GetData());
           }
+#endif
         }
         else
         {

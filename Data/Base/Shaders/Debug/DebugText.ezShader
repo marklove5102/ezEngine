@@ -62,11 +62,11 @@ VS_OUT main(uint VertexID : SV_VertexID, uint InstanceID : SV_InstanceID)
 	float texCoordX = fmod( glyphIndex, 16.0 );
 	float texCoordY = floor( glyphIndex * invAtlasSize.x );
 
-	VS_OUT RetVal;
+	VS_OUT RetVal = (VS_OUT)0;
 	RetVal.Position = float4(screenPosition, 0.0, 1.0);
 	RetVal.TexCoord0 = (float2(texCoordX, texCoordY) + vertexPosition) * invAtlasSize;
 	RetVal.Color0 = RGBA8ToFloat4(data.color);
-	RetVal.InstanceID = InstanceID;
+
 #if defined(CAMERA_MODE)
 #  if CAMERA_MODE == CAMERA_MODE_STEREO
 #    if VERTEX_SHADER_RENDER_TARGET_ARRAY_INDEX == TRUE
@@ -74,6 +74,7 @@ VS_OUT main(uint VertexID : SV_VertexID, uint InstanceID : SV_InstanceID)
 #    endif
 #  endif
 #endif
+
 	return RetVal;
 }
 
@@ -100,5 +101,5 @@ float4 main(PS_IN Input) : SV_Target
   float c = saturate(glyph * 2.0 - 1.0); // 0.5 - 1 is color content
   float a = saturate(glyph * 2.0); // 0 - 0.5 is alpha content
 
-	return float4(c, c, c, a) * Input.Color0;
+  return float4(c, c, c, a) * Input.Color0;
 }

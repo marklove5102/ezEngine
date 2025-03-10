@@ -433,6 +433,7 @@ void ezDecalComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) const
 
   const ezQuat axisRotation = ezBasisAxis::GetBasisRotation_PosX(m_ProjectionAxis);
 
+  #if 0
   pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
   pRenderData->m_GlobalTransform.m_vScale = (axisRotation * (pRenderData->m_GlobalTransform.m_vScale.CompMul(m_vExtents * 0.5f))).Abs();
   pRenderData->m_GlobalTransform.m_qRotation = pRenderData->m_GlobalTransform.m_qRotation * axisRotation;
@@ -448,6 +449,7 @@ void ezDecalComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) const
       pRenderData->m_GlobalTransform.m_vScale.y *= fAspectRatio;
     }
   }
+  #endif
 
   pRenderData->m_uiApplyOnlyToId = m_uiApplyOnlyToId;
   pRenderData->m_uiFlags = uiDecalFlags;

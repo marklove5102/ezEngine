@@ -1,8 +1,7 @@
 #pragma once
 
 #include <Foundation/Communication/Message.h>
-#include <Foundation/Math/BoundingBoxSphere.h>
-#include <Foundation/Math/Transform.h>
+#include <Foundation/Math/Vec3.h>
 #include <Foundation/Memory/FrameAllocator.h>
 #include <Foundation/Strings/HashedString.h>
 #include <RendererCore/Pipeline/Declarations.h>
@@ -58,6 +57,7 @@ public:
     enum Enum
     {
       Dynamic = EZ_BIT(0),
+      FlipWinding = EZ_BIT(1),
 
       Default = 0
     };
@@ -65,8 +65,21 @@ public:
     struct Bits
     {
       StorageType Dynamic : 1;
+      StorageType FlipWinding : 1;
     };
   };
+
+  struct DataOffsets
+  {
+    ezUInt32 m_uiInstance = 0;
+    ezUInt32 m_uiCustomInstance = 0;
+    ezUInt32 m_uiMaterial = 0;
+    ezUInt32 m_uiSkinning = 0; // TODO: this could be removed if we switch to compute shader skinning
+  };
+
+  bool IsDynamic() const;
+  bool IsStatic() const;
+  bool FlipWinding() const;
 
   /// \brief Returns the final sorting for this render data with the given category and camera.
   ezUInt64 GetFinalSortingKey(Category category, const ezCamera& camera) const;
@@ -77,17 +90,27 @@ public:
 
   ezBitflags<Flags> m_Flags;
 
+  ezUInt32 m_uiNumInstances = 0;
+  DataOffsets m_DataOffsets;
+
+  ezGALDynamicBufferHandle m_hInstanceDataBuffer;
+
+  // TODO(idr): remove global transform
   ezTransform m_GlobalTransform = ezTransform::MakeIdentity();
-  ezBoundingBoxSphere m_GlobalBounds;
+
+  ezVec3 m_vGlobalPosition = ezVec3::MakeZero();
+  float m_fSortingDepthOffset = 0.0f;
 
   ezUInt32 m_uiSortingKey = 0;
-  float m_fSortingDepthOffset = 0.0f;
 
   ezGameObjectHandle m_hOwner;
 
 #if EZ_ENABLED(EZ_COMPILE_FOR_DEVELOPMENT)
   const ezGameObject* m_pOwner = nullptr; ///< Debugging only. It is not allowed to access the game object during rendering.
 #endif
+
+protected:
+  bool CanBatchByBaseValues(const ezRenderData& other) const;
 
 private:
   EZ_MAKE_SUBSYSTEM_STARTUP_FRIEND(RendererCore, RenderData);

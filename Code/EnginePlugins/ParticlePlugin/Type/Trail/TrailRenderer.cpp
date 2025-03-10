@@ -69,7 +69,7 @@ void ezParticleTrailRenderer::RenderBatch(const ezRenderViewContext& renderViewC
 
   ezBindGroupBuilder& bindGroupMaterial = renderViewContext.m_pRenderContext->GetBindGroup(EZ_GAL_BIND_GROUP_MATERIAL);
   // now render all particle effects of type Trail
-  for (auto it = batch.GetIterator<ezParticleTrailRenderData>(0, batch.GetCount()); it.IsValid(); ++it)
+  for (auto it = batch.GetIterator<ezParticleTrailRenderData>(0, batch.GetDataCount()); it.IsValid(); ++it)
   {
     const ezParticleTrailRenderData* pRenderData = it;
 

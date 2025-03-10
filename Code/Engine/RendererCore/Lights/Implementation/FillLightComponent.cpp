@@ -199,7 +199,7 @@ void ezFillLightComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) c
 
   auto pRenderData = ezCreateRenderDataForThisFrame<ezFillLightRenderData>(GetOwner());
 
-  pRenderData->m_GlobalTransform = t;
+  /*pRenderData->m_GlobalTransform = t;
   pRenderData->m_LightColor = GetEffectiveColor();
   pRenderData->m_LightMode = m_LightMode;
   pRenderData->m_fIntensity = m_fIntensity;
@@ -209,7 +209,7 @@ void ezFillLightComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) c
 
   pRenderData->FillBatchIdAndSortingKey(fScreenSpaceSize);
 
-  msg.AddRenderData(pRenderData, ezDefaultRenderDataCategories::Light, ezRenderData::Caching::IfStatic);
+  msg.AddRenderData(pRenderData, ezDefaultRenderDataCategories::Light, ezRenderData::Caching::IfStatic);*/
 }
 
 

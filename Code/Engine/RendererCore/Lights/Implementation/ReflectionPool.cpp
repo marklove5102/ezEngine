@@ -126,7 +126,7 @@ void ezReflectionPool::ExtractReflectionProbe(const ezComponent* pComponent, ezM
     const ezGameObject* pOwner = pComponent->GetOwner();
     const ezTransform ownerTransform = pOwner->GetGlobalTransform();
 
-    ezUInt32 uiMipLevelsToRender = probeData.m_desc.m_bShowMipMaps ? uiMipLevels : 1;
+    /*ezUInt32 uiMipLevelsToRender = probeData.m_desc.m_bShowMipMaps ? uiMipLevels : 1;
     for (ezUInt32 i = 0; i < uiMipLevelsToRender; i++)
     {
       ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(pOwner);
@@ -146,7 +146,7 @@ void ezReflectionPool::ExtractReflectionProbe(const ezComponent* pComponent, ezM
 
       pRenderData->FillSortingKey();
       ref_msg.AddRenderData(pRenderData, ezDefaultRenderDataCategories::LitOpaque, ezRenderData::Caching::Never);
-    }
+    }*/
   }
 #endif
 }

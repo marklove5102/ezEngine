@@ -93,20 +93,20 @@ void ezSkyBoxComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) cons
   if (msg.m_OverrideCategory != ezInvalidRenderDataCategory || msg.m_pView->GetCamera()->IsOrthographic())
     return;
 
-  ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(GetOwner());
-  {
-    pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
-    pRenderData->m_GlobalTransform.m_vPosition.SetZero(); // skybox should always be at the origin
-    pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
-    pRenderData->m_hMesh = m_hMesh;
-    pRenderData->m_hMaterial = m_hCubeMapMaterial;
-    pRenderData->m_uiSubMeshIndex = 0;
-    pRenderData->m_uiUniqueID = GetUniqueIdForRendering();
+  //ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(GetOwner());
+  //{
+  //  pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
+  //  pRenderData->m_GlobalTransform.m_vPosition.SetZero(); // skybox should always be at the origin
+  //  pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
+  //  pRenderData->m_hMesh = m_hMesh;
+  //  pRenderData->m_hMaterial = m_hCubeMapMaterial;
+  //  pRenderData->m_uiSubMeshIndex = 0;
+  //  pRenderData->m_uiUniqueID = GetUniqueIdForRendering();
 
-    pRenderData->FillSortingKey();
-  }
+  //  pRenderData->FillSortingKey();
+  //}
 
-  msg.AddRenderData(pRenderData, ezDefaultRenderDataCategories::Sky, ezRenderData::Caching::Never);
+  //msg.AddRenderData(pRenderData, ezDefaultRenderDataCategories::Sky, ezRenderData::Caching::Never);
 }
 
 void ezSkyBoxComponent::SerializeComponent(ezWorldWriter& inout_stream) const

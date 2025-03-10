@@ -40,7 +40,7 @@ public:
     const SortableRenderData* m_pEnd;
   };
 
-  ezUInt32 GetCount() const;
+  ezUInt32 GetDataCount() const;
 
   template <typename T>
   const T* GetFirstData() const;
@@ -48,11 +48,19 @@ public:
   template <typename T>
   Iterator<T> GetIterator(ezUInt32 uiStartIndex = 0, ezUInt32 uiCount = ezInvalidIndex) const;
 
+  ezGALBufferHandle GetDataOffsetsBuffer() const;
+  ezUInt32 GetFirstDataOffsetIndex() const;
+  ezUInt32 GetInstanceCount() const;
+
 private:
   friend class ezExtractedRenderData;
   friend class ezRenderDataBatchList;
 
   ezArrayPtr<SortableRenderData> m_Data;
+
+  ezGALBufferHandle m_hDataOffsetsBuffer;
+  ezUInt32 m_uiFirstDataOffsetIndex = 0;
+  ezUInt32 m_uiInstanceCount = 0;
 };
 
 class ezRenderDataBatchList

@@ -115,10 +115,11 @@ void ezDirectionalLightComponent::OnMsgExtractRenderData(ezMsgExtractRenderData&
 
   auto pRenderData = ezCreateRenderDataForThisFrame<ezDirectionalLightRenderData>(GetOwner());
 
-  pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
   pRenderData->m_LightColor = GetEffectiveColor();
   pRenderData->m_fIntensity = m_fIntensity;
   pRenderData->m_fSpecularMultiplier = m_fSpecularMultiplier;
+
+  pRenderData->m_vDirection = GetOwner()->GetGlobalRotation() * ezVec3(-1, 0, 0);
 
   if (m_bCastShadows)
   {

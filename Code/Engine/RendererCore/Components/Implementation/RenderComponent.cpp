@@ -2,6 +2,7 @@
 
 #include <RendererCore/Components/RenderComponent.h>
 #include <RendererCore/RenderWorld/RenderWorld.h>
+#include <RendererCore/RenderWorld/RenderWorldModule.h>
 
 // clang-format off
 EZ_BEGIN_ABSTRACT_COMPONENT_TYPE(ezRenderComponent, 1)
@@ -32,6 +33,9 @@ void ezRenderComponent::Deinitialize()
 
 void ezRenderComponent::OnActivated()
 {
+  // Ensure that the render world module exists.
+  GetWorld()->GetOrCreateModule<ezRenderWorldModule>();
+
   TriggerLocalBoundsUpdate();
 }
 

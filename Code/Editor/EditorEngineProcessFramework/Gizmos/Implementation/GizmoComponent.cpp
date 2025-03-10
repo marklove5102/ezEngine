@@ -37,6 +37,7 @@ ezMeshRenderData* ezGizmoComponent::CreateRenderData() const
 
   ezGizmoRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezGizmoRenderData>(GetOwner());
   pRenderData->m_GizmoColor = color;
+  pRenderData->m_uiUniqueID = GetUniqueIdForRendering();
   pRenderData->m_bIsPickable = m_bIsPickable;
 
   return pRenderData;

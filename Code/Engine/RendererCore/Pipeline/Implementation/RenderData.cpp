@@ -58,6 +58,13 @@ EZ_BEGIN_DYNAMIC_REFLECTED_TYPE(ezMsgExtractOccluderData, 1, ezRTTIDefaultAlloca
 EZ_END_DYNAMIC_REFLECTED_TYPE;
 // clang-format on
 
+// TODO(idr): enable checks
+//#if EZ_ENABLED(EZ_COMPILE_FOR_DEVELOPMENT)
+//  static_assert(sizeof(ezRenderData) == 72);
+//#else
+//  static_assert(sizeof(ezRenderData) == 64);
+//#endif
+
 ezHybridArray<ezRenderData::CategoryData, 32> ezRenderData::s_CategoryData;
 
 ezHybridArray<const ezRTTI*, 16> ezRenderData::s_RendererTypes;

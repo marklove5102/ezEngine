@@ -112,7 +112,7 @@ void ezSphereReflectionProbeComponent::OnMsgExtractRenderData(ezMsgExtractRender
     ezReflectionPool::UpdateReflectionProbe(GetWorld(), m_Id, m_Desc, this);
   }
 
-  auto pRenderData = ezCreateRenderDataForThisFrame<ezReflectionProbeRenderData>(GetOwner());
+  /*auto pRenderData = ezCreateRenderDataForThisFrame<ezReflectionProbeRenderData>(GetOwner());
   pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
   pRenderData->m_vProbePosition = pRenderData->m_GlobalTransform * m_Desc.m_vCaptureOffset;
   pRenderData->m_vHalfExtents = ezVec3(m_fRadius);
@@ -130,7 +130,7 @@ void ezSphereReflectionProbeComponent::OnMsgExtractRenderData(ezMsgExtractRender
   const float fEllipsoidVolume = fSphereConstant * ezMath::Abs(vScale.x * vScale.y * vScale.z);
 
   float fPriority = ComputePriority(msg, pRenderData, fEllipsoidVolume, vScale);
-  ezReflectionPool::ExtractReflectionProbe(this, msg, pRenderData, GetWorld(), m_Id, fPriority);
+  ezReflectionPool::ExtractReflectionProbe(this, msg, pRenderData, GetWorld(), m_Id, fPriority);*/
 }
 
 void ezSphereReflectionProbeComponent::OnTransformChanged(ezMsgTransformChanged& msg)

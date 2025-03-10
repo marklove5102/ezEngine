@@ -5,7 +5,6 @@
 
 #include <RendererCore/Debug/DebugRenderer.h>
 #include <RendererCore/Meshes/MeshResource.h>
-#include <RendererCore/Pipeline/InstanceDataProvider.h>
 #include <RendererCore/Pipeline/RenderDataBatch.h>
 #include <RendererCore/Pipeline/RenderPipeline.h>
 #include <RendererCore/Pipeline/RenderPipelinePass.h>
@@ -47,6 +46,7 @@ void ezKrautRenderer::GetSupportedRenderDataCategories(ezHybridArray<ezRenderDat
 
 void ezKrautRenderer::RenderBatch(const ezRenderViewContext& renderViewContext, const ezRenderPipelinePass* pPass, const ezRenderDataBatch& batch) const
 {
+#if 0
   ezRenderContext* pRenderContext = renderViewContext.m_pRenderContext;
 
   const ezKrautRenderData* pRenderData = batch.GetFirstData<ezKrautRenderData>();
@@ -109,11 +109,12 @@ void ezKrautRenderer::RenderBatch(const ezRenderViewContext& renderViewContext, 
 
     uiStartIndex += instanceData.GetCount();
   }
+#endif
 }
 
 void ezKrautRenderer::FillPerInstanceData(const ezVec3& vLodCamPos, ezArrayPtr<ezPerInstanceData> instanceData, const ezRenderDataBatch& batch, bool bIsShadowView, ezUInt32 uiStartIndex, ezUInt32& out_uiFilteredCount) const
 {
-  ezUInt32 uiCount = ezMath::Min<ezUInt32>(instanceData.GetCount(), batch.GetCount() - uiStartIndex);
+  ezUInt32 uiCount = ezMath::Min<ezUInt32>(instanceData.GetCount(), batch.GetDataCount() - uiStartIndex);
   ezUInt32 uiCurrentIndex = 0;
 
   for (auto it = batch.GetIterator<ezKrautRenderData>(uiStartIndex, uiCount); it.IsValid(); ++it)
@@ -147,7 +148,6 @@ void ezKrautRenderer::FillPerInstanceData(const ezVec3& vLodCamPos, ezArrayPtr<e
 
 ezKrautRenderer::TempTreeCB::TempTreeCB(ezRenderContext* pRenderContext)
 {
-  // TODO This pattern looks like it is inefficient. Should it use the GPU pool instead somehow?
   m_hConstantBuffer = ezRenderContext::CreateConstantBufferStorage(m_pConstants);
 
   ezBindGroupBuilder& bindGroupRenderPass = ezRenderContext::GetDefaultInstance()->GetBindGroup(EZ_GAL_BIND_GROUP_RENDER_PASS);

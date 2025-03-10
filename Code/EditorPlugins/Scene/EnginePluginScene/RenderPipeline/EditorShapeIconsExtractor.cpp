@@ -128,7 +128,6 @@ void ezEditorShapeIconsExtractor::ExtractShapeIcon(const ezGameObject* pObject, 
     ezSpriteRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezSpriteRenderData>(pObject);
     {
       pRenderData->m_GlobalTransform = pObject->GetGlobalTransform();
-      pRenderData->m_GlobalBounds = pObject->GetGlobalBounds();
       pRenderData->m_hTexture = pShapeIconInfo->m_hTexture;
       pRenderData->m_fSize = m_fSize;
       pRenderData->m_fMaxScreenSize = m_fMaxScreenSize;

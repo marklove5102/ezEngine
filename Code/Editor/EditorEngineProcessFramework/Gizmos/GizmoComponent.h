@@ -9,6 +9,7 @@ class EZ_EDITORENGINEPROCESSFRAMEWORK_DLL ezGizmoRenderData : public ezMeshRende
 
 public:
   ezColor m_GizmoColor;
+  ezUInt32 m_uiUniqueID;
   bool m_bIsPickable;
 };
 

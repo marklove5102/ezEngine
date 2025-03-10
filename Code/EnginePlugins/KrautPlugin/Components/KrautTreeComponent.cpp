@@ -224,7 +224,6 @@ void ezKrautTreeComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) c
         pRenderData->m_uiThisLodIndex = uiCurLod;
 
         pRenderData->m_GlobalTransform = tOwner;
-        pRenderData->m_GlobalBounds = bounds;
         pRenderData->m_hMesh = lodData.m_hMesh;
         pRenderData->m_uiSubMeshIndex = static_cast<ezUInt8>(subMeshIdx);
         pRenderData->m_uiUniqueID = GetUniqueIdForRendering(0);

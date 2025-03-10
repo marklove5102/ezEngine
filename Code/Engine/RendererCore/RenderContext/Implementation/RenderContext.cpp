@@ -306,25 +306,25 @@ void ezRenderContext::BindMeshBuffer(const ezMeshBufferResourceHandle& hMeshBuff
 {
   ezResourceLock<ezMeshBufferResource> pMeshBuffer(hMeshBuffer, ezResourceAcquireMode::AllowLoadingFallback);
   BindMeshBuffer(pMeshBuffer->GetVertexBuffers(), pMeshBuffer->GetIndexBuffer(), pMeshBuffer->GetVertexAttributes(), pMeshBuffer->GetTopology(),
-    pMeshBuffer->GetPrimitiveCount());
+    pMeshBuffer->GetPrimitiveCount(), hDataOffsetsBuffer, uiFirstDataOffset);
 }
 
 void ezRenderContext::BindMeshBuffer(const ezDynamicMeshBufferResourceHandle& hDynamicMeshBuffer, ezGALBufferHandle hDataOffsetsBuffer /*= {}*/, ezUInt32 uiFirstDataOffset /*= 0*/)
 {
   ezResourceLock<ezDynamicMeshBufferResource> pMeshBuffer(hDynamicMeshBuffer, ezResourceAcquireMode::AllowLoadingFallback);
-  BindMeshBuffer(pMeshBuffer->GetVertexBuffers(), pMeshBuffer->GetIndexBuffer(), pMeshBuffer->GetVertexAttributes(), pMeshBuffer->GetDescriptor().m_Topology, pMeshBuffer->GetDescriptor().m_uiMaxPrimitives);
+  BindMeshBuffer(pMeshBuffer->GetVertexBuffers(), pMeshBuffer->GetIndexBuffer(), pMeshBuffer->GetVertexAttributes(), pMeshBuffer->GetDescriptor().m_Topology, pMeshBuffer->GetDescriptor().m_uiMaxPrimitives, hDataOffsetsBuffer, uiFirstDataOffset);
 }
 
 void ezRenderContext::BindMeshBuffer(ezArrayPtr<const ezGALBufferHandle> vertexBuffers, ezGALBufferHandle hIndexBuffer, ezArrayPtr<const ezGALVertexAttribute> vertexAttributes, ezGALPrimitiveTopology::Enum topology, ezUInt32 uiPrimitiveCount, ezGALBufferHandle hDataOffsetsBuffer /*= {}*/, ezUInt32 uiFirstDataOffset /*= 0*/)
 {
-  if (hDataOffsetsBuffer.IsInvalidated() == false || uiFirstDataOffset != 0)
-  {
-    EZ_ASSERT_NOT_IMPLEMENTED;
-  }
-
   constexpr ezUInt32 uiMaxNumVertexBuffers = EZ_ARRAY_SIZE(m_hVertexBuffers);
+  constexpr ezUInt32 uiDataOffsetsBufferSlot = ezMeshVertexStreamType::DataOffsets;
+  EZ_ASSERT_DEBUG(vertexBuffers.GetCount() < uiDataOffsetsBufferSlot, "Too many vertex buffers");
+
+  // We need to create a new array to ensure that unsused slots are set to invalid
   ezGALBufferHandle newVertexBuffers[uiMaxNumVertexBuffers] = {};
   ezMemoryUtils::Copy(newVertexBuffers, vertexBuffers.GetPtr(), vertexBuffers.GetCount());
+  newVertexBuffers[uiDataOffsetsBufferSlot] = hDataOffsetsBuffer;
 
   if (ezMemoryUtils::IsEqual(m_hVertexBuffers, newVertexBuffers, uiMaxNumVertexBuffers) && m_hIndexBuffer == hIndexBuffer && m_VertexAttributes == vertexAttributes &&
       m_GraphicsPipeline.m_Topology == topology && m_uiMeshBufferPrimitiveCount == uiPrimitiveCount)
@@ -366,6 +366,10 @@ void ezRenderContext::BindMeshBuffer(ezArrayPtr<const ezGALBufferHandle> vertexB
 
   ezMemoryUtils::Copy(m_hVertexBuffers, newVertexBuffers, uiMaxNumVertexBuffers);
 
+  m_hIndexBuffer = hIndexBuffer;
+  m_VertexAttributes = vertexAttributes;
+  m_uiMeshBufferPrimitiveCount = uiPrimitiveCount;
+
   ezGALDevice* pDevice = ezGALDevice::GetDefaultDevice();
   for (ezUInt32 i = 0; i < vertexBuffers.GetCount(); ++i)
   {
@@ -374,9 +378,15 @@ void ezRenderContext::BindMeshBuffer(ezArrayPtr<const ezGALBufferHandle> vertexB
     m_VertexBufferBindingRates[i] = ezGALVertexBindingRate::Vertex;
   }
 
-  m_hIndexBuffer = hIndexBuffer;
-  m_VertexAttributes = vertexAttributes;
-  m_uiMeshBufferPrimitiveCount = uiPrimitiveCount;
+  if (hDataOffsetsBuffer.IsInvalidated() == false)
+  {
+    EZ_ASSERT_DEBUG(GetVertexBufferStride(pDevice, hDataOffsetsBuffer) == sizeof(ezRenderData::DataOffsets), "Wrong buffer stride");
+    m_VertexBufferStrides[uiDataOffsetsBufferSlot] = sizeof(ezRenderData::DataOffsets);
+    m_VertexBufferOffsets[uiDataOffsetsBufferSlot] = uiFirstDataOffset * sizeof(ezRenderData::DataOffsets);
+    m_VertexBufferBindingRates[uiDataOffsetsBufferSlot] = ezGALVertexBindingRate::Instance;
+
+    m_VertexAttributes.PushBack(ezMeshVertexStreamConfig::GetDataOffsetsVertexAttribute());
+  }
 
   m_StateFlags.Add(ezRenderContextFlags::MeshBufferBindingChanged);
 }

@@ -200,40 +200,40 @@ void ezGreyBoxComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg) con
     const ezUInt32 uiMaterialIndex = parts[uiPartIndex].m_uiMaterialIndex;
     ezMaterialResourceHandle hMaterial = m_hMaterial.IsValid() ? m_hMaterial : pMesh->GetMaterials()[uiMaterialIndex];
 
-    ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(GetOwner());
-    {
-      pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
-      pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
-      pRenderData->m_hMesh = m_hMesh;
-      pRenderData->m_hMaterial = hMaterial;
-      pRenderData->m_Color = m_Color;
-      pRenderData->m_vCustomData = m_vCustomData;
+    //ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(GetOwner());
+    //{
+    //  pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
+    //  pRenderData->m_GlobalBounds = GetOwner()->GetGlobalBounds();
+    //  pRenderData->m_hMesh = m_hMesh;
+    //  pRenderData->m_hMaterial = hMaterial;
+    //  pRenderData->m_Color = m_Color;
+    //  pRenderData->m_vCustomData = m_vCustomData;
 
-      pRenderData->m_uiSubMeshIndex = uiPartIndex;
-      pRenderData->m_uiFlipWinding = uiFlipWinding;
-      pRenderData->m_uiUniformScale = uiUniformScale;
+    //  pRenderData->m_uiSubMeshIndex = uiPartIndex;
+    //  pRenderData->m_uiFlipWinding = uiFlipWinding;
+    //  pRenderData->m_uiUniformScale = uiUniformScale;
 
-      pRenderData->m_uiUniqueID = GetUniqueIdForRendering(uiMaterialIndex);
+    //  pRenderData->m_uiUniqueID = GetUniqueIdForRendering(uiMaterialIndex);
 
-      pRenderData->FillSortingKey();
-    }
+    //  pRenderData->FillSortingKey();
+    //}
 
-    bool bDontCacheYet = false;
+    //bool bDontCacheYet = false;
 
-    // Determine render data category.
-    ezRenderData::Category category = ezDefaultRenderDataCategories::LitOpaque;
+    //// Determine render data category.
+    //ezRenderData::Category category = ezDefaultRenderDataCategories::LitOpaque;
 
-    if (hMaterial.IsValid())
-    {
-      ezResourceLock<ezMaterialResource> pMaterial(hMaterial, ezResourceAcquireMode::AllowLoadingFallback);
+    //if (hMaterial.IsValid())
+    //{
+    //  ezResourceLock<ezMaterialResource> pMaterial(hMaterial, ezResourceAcquireMode::AllowLoadingFallback);
 
-      if (pMaterial.GetAcquireResult() == ezResourceAcquireResult::LoadingFallback)
-        bDontCacheYet = true;
+    //  if (pMaterial.GetAcquireResult() == ezResourceAcquireResult::LoadingFallback)
+    //    bDontCacheYet = true;
 
-      category = pMaterial->GetRenderDataCategory();
-    }
+    //  category = pMaterial->GetRenderDataCategory();
+    //}
 
-    msg.AddRenderData(pRenderData, category, bDontCacheYet ? ezRenderData::Caching::Never : ezRenderData::Caching::IfStatic);
+    //msg.AddRenderData(pRenderData, category, bDontCacheYet ? ezRenderData::Caching::Never : ezRenderData::Caching::IfStatic);
   }
 }
 

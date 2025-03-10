@@ -151,6 +151,9 @@ void ezHeightfieldComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg)
     const ezUInt32 uiMaterialIndex = parts[uiPartIndex].m_uiMaterialIndex;
     ezMaterialResourceHandle hMaterial = m_hMaterial.IsValid() ? m_hMaterial : pMesh->GetMaterials()[uiMaterialIndex];
 
+    // TODO(idr)
+    EZ_ASSERT_NOT_IMPLEMENTED;
+    #if 0
     ezMeshRenderData* pRenderData = ezCreateRenderDataForThisFrame<ezMeshRenderData>(GetOwner());
     {
       pRenderData->m_GlobalTransform = GetOwner()->GetGlobalTransform();
@@ -184,6 +187,7 @@ void ezHeightfieldComponent::OnMsgExtractRenderData(ezMsgExtractRenderData& msg)
     }
 
     msg.AddRenderData(pRenderData, category, bDontCacheYet ? ezRenderData::Caching::Never : ezRenderData::Caching::IfStatic);
+    #endif
   }
 }
 

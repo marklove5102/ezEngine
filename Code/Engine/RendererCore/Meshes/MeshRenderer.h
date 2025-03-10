@@ -23,6 +23,4 @@ public:
 
 protected:
   virtual void SetAdditionalData(const ezRenderViewContext& renderViewContext, const ezMeshRenderData* pRenderData) const;
-  virtual void FillPerInstanceData(
-    ezArrayPtr<ezPerInstanceData> instanceData, const ezRenderDataBatch& batch, ezUInt32 uiStartIndex, ezUInt32& out_uiFilteredCount) const;
 };
