@@ -459,7 +459,29 @@ namespace ezRmlUiInternal
           }
           break;
 
-            EZ_DEFAULT_CASE_NOT_IMPLEMENTED;
+          case CommandType::EnableClipMask:
+          {
+            auto& cmd = pCommandBuffer->ConsumeCommand<CommandEnableClipMask>(uiCommandOffset);
+
+            // not implemented
+            // pCommandEncoder->SetScissorRect(cmd.m_ScissorRect);
+          }
+          break;
+
+          case CommandType::RenderToClipMask:
+          {
+            auto& cmd = pCommandBuffer->ConsumeCommand<CommandRenderToClipMask>(uiCommandOffset);
+
+            // not implemented
+            // pCommandEncoder->SetScissorRect(cmd.m_ScissorRect);
+          }
+          break;
+
+          default:
+          {
+            EZ_ASSERT_ALWAYS(false, "RmlUI: Command Type '{}' is not implemented.", cmdType);
+            break;
+          }
         }
       }
 

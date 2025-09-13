@@ -1,0 +1,41 @@
+body.game-widget
+{
+  font-size: 13dp;
+
+  width: 100%;
+  height: 100%;
+  background-color: rgba(100, 100, 120, 160);
+  color: white;
+}
+
+.game-widget .title
+{
+  padding: 4dp;
+  background-color: rgb(14, 61, 99);
+}
+
+.game-widget .content
+{
+  padding: 4dp;
+}
+
+.game-widget .property
+{
+  display: flex;
+  margin-bottom: 4dp;
+  align-items: center; /* Vertically center label and input */
+}
+
+.game-widget .property .label
+{
+  width: 50dp;
+  text-align: right;
+  margin-right: 4dp;
+  flex-shrink: 0;
+}
+
+.game-widget .property select
+{
+  
+}
+

@@ -1,0 +1,47 @@
+/* Overall settings for the body of the app-menu */
+body.app-menu
+{
+  /* cover the entire screen */
+  width: 100%;
+  height: 100%;
+
+  /* semi-transparent dark background */
+  background-color: rgba(100, 100, 120, 180);
+}
+
+/* Center the content div within the app-menu body */
+.app-menu .content
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* take up the entire vertical space for proper centering */
+}
+
+/* Style for the big buttons in the app-menu */
+.app-menu button
+{
+  width: 180dp;
+  height: 80dp;
+  line-height: 80dp; /* needed for vertical text centering */
+
+  align-items: center;
+  text-align: center;
+  
+  font-size: 18dp;
+  margin: 4dp 0;
+  padding: 10dp 10dp;
+  
+  transition: transform 0.4s cubic-out; /* Add transform to transition */
+}
+
+.app-menu button:hover
+{
+  transform: scale(1.08); /* Slightly grow the button when hovering over them */
+}
+
+.app-menu button:active
+{
+  transition: none; /* no transition for immediate effect */
+}

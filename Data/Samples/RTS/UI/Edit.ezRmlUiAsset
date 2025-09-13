@@ -12,7 +12,26 @@ o
 		VarArray %Dependencies
 		{
 			s{"UI/Edit.rml"}
-			s{"UI/UI.rcss"}
+			s{"UI/game-widget.rcss"}
+			s{"UI/rmlui-default/assets.rcss"}
+			s{"UI/rmlui-default/button.rcss"}
+			s{"UI/rmlui-default/common.rcss"}
+			s{"UI/rmlui-default/expand.rcss"}
+			s{"UI/rmlui-default/input-checkbox.rcss"}
+			s{"UI/rmlui-default/input-radio.rcss"}
+			s{"UI/rmlui-default/input-range.rcss"}
+			s{"UI/rmlui-default/input-submit.rcss"}
+			s{"UI/rmlui-default/input-text.rcss"}
+			s{"UI/rmlui-default/input.rcss"}
+			s{"UI/rmlui-default/progress.rcss"}
+			s{"UI/rmlui-default/scrollbar.rcss"}
+			s{"UI/rmlui-default/select.rcss"}
+			s{"UI/rmlui-default/table.rcss"}
+			s{"UI/rmlui-default/tabs.rcss"}
+			s{"UI/rmlui-default/template.rml"}
+			s{"UI/rmlui-default/textarea.rcss"}
+			s{"UI/rmlui-default/typography.rcss"}
+			s{"UI/rmlui-default/window.rcss"}
 		}
 		Uuid %DocumentID{u4{10922229380658380468,5439759434091703483}}
 		u4 %Hash{4733857253323256867}

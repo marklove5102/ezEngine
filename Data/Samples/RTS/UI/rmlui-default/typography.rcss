@@ -1,0 +1,17 @@
+p
+{
+	text-align: left;
+	margin-bottom: 1em;
+}
+
+h1
+{
+	margin-left: 0.4em;
+	margin-bottom: 0.4em;
+
+	text-align: left;
+	font-size: 16dp;
+	font-weight: bold;
+
+	font-effect: glow(1dp 1dp 1dp 1dp #1117);
+}

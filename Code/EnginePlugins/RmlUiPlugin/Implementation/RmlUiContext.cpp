@@ -58,6 +58,7 @@ void ezRmlUiContext::ShowDocument()
 {
   if (HasDocument())
   {
+    EZ_LOCK(ezRmlUi::GetSingleton()->GetContextMutex());
     GetDocument(0)->Show();
   }
 }
@@ -66,6 +67,7 @@ void ezRmlUiContext::HideDocument()
 {
   if (HasDocument())
   {
+    EZ_LOCK(ezRmlUi::GetSingleton()->GetContextMutex());
     GetDocument(0)->Hide();
   }
 

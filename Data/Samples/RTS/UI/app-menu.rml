@@ -1,0 +1,15 @@
+<rml>
+  <head>
+    <link type="text/template" href="rmlui-default/template.rml"/>
+    <link type="text/css" href="app-menu.rcss"/>
+  </head>
+  <body class="app-menu">
+    <div class="content">
+      <!-- Buttons are stacked vertically due to the .app-menu.content class -->
+      <button onclick="Game-Resume">Resume Game</button>
+      <button onclick="Game-Settings">Settings</button>
+      <button onclick="Game-Exit">Exit</button>
+    </div>
+  </body>
+</rml>
+

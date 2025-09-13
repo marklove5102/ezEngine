@@ -2,7 +2,7 @@ HeaderV2
 {
 o
 {
-	Uuid %id{u4{1305255426561629067,5673149715115996774}}
+	Uuid %id{u4{4962706044385365397,5452667371218815941}}
 	s %t{"ezAssetDocumentInfo"}
 	u3 %v{2}
 	s %n{"Header"}
@@ -11,8 +11,8 @@ o
 		s %AssetType{"RmlUi"}
 		VarArray %Dependencies
 		{
-			s{"UI/SelectMode.rml"}
-			s{"UI/game-widget.rcss"}
+			s{"UI/app-menu.rml"}
+			s{"UI/app-menu.rcss"}
 			s{"UI/rmlui-default/assets.rcss"}
 			s{"UI/rmlui-default/button.rcss"}
 			s{"UI/rmlui-default/common.rcss"}
@@ -33,14 +33,14 @@ o
 			s{"UI/rmlui-default/typography.rcss"}
 			s{"UI/rmlui-default/window.rcss"}
 		}
-		Uuid %DocumentID{u4{1305255426561629067,5673149715115996774}}
-		u4 %Hash{6468534380519459840}
+		Uuid %DocumentID{u4{4962706044385365397,5452667371218815941}}
+		u4 %Hash{9688044432908032294}
 		VarArray %MetaInfo{}
 		VarArray %Outputs{}
 		VarArray %PackageDeps{}
 		VarArray %References
 		{
-			s{"UI/SelectMode.rml"}
+			s{"UI/app-menu.rml"}
 		}
 		s %Tags{""}
 	}
@@ -50,13 +50,13 @@ Objects
 {
 o
 {
-	Uuid %id{u4{9049631250410921897,5270650338730648315}}
+	Uuid %id{u4{2791323489205729186,5145720104531184730}}
 	s %t{"ezRmlUiAssetProperties"}
 	u3 %v{1}
 	p
 	{
 		Vec2u %ReferenceResolution{u3{1280,720}}
-		s %RmlFile{"UI/SelectMode.rml"}
+		s %RmlFile{"UI/app-menu.rml"}
 		s %ScaleMode{"ezRmlUiScaleMode::WithScreenSize"}
 	}
 }
@@ -70,7 +70,7 @@ o
 	{
 		VarArray %Children
 		{
-			Uuid{u4{9049631250410921897,5270650338730648315}}
+			Uuid{u4{2791323489205729186,5145720104531184730}}
 		}
 	}
 }

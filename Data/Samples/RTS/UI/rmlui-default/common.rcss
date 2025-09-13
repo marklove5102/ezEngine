@@ -1,0 +1,14 @@
+body
+{
+	font-family: LatoLatin;
+	font-weight: normal;
+	font-style: normal;
+	font-size: 15dp;
+	color: white;
+	nav: auto;
+}
+
+div
+{
+  display: block;
+}
