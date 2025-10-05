@@ -22,6 +22,8 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC
   Foundation
   RendererFoundation
+  Vulkan-Headers
+  VMA
 )
 
 if(EZ_3RDPARTY_GLFW_SUPPORT)

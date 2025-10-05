@@ -80,7 +80,7 @@ macro(ez_platformhook_find_vulkan)
 			#set(CMAKE_FIND_DEBUG_MODE TRUE)
 			unset(EZ_VULKAN_DIR CACHE)
 			unset(EzVulkan_DIR CACHE)
-			set(EZ_SHARED_VULKAN_DIR "${EZ_ROOT}/Workspace/shared/vulkan-sdk/${EZ_CONFIG_VULKAN_SDK_LINUXX64_VERSION}")
+			set(EZ_SHARED_VULKAN_DIR "${EZ_ROOT}/Workspace/shared/vulkan-sdk/${EZ_CONFIG_DIRECTXSHADERCOMPILER_LINUXX64_VERSION}")
 			find_path(EZ_VULKAN_DIR config/vk_layer_settings.txt
 					PATHS
 					${EZ_SHARED_VULKAN_DIR}
@@ -95,8 +95,8 @@ macro(ez_platformhook_find_vulkan)
 				# This is a bit wasteful as we already downloaded it and we only need a few headers, but cross workspace dependencies aren't easy to define in cmake. 
 				if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
 					# To prevent race-conditions if two CMake presets are updated at the same time, we download into the local workspace and then create a link into the shared directory.
-					ez_download_and_extract("${EZ_CONFIG_VULKAN_SDK_LINUXX64_URL}" "${CMAKE_BINARY_DIR}/vulkan-sdk" "vulkan-sdk-${EZ_CONFIG_VULKAN_SDK_LINUXX64_VERSION}")
-					ez_create_link("${CMAKE_BINARY_DIR}/vulkan-sdk/${EZ_CONFIG_VULKAN_SDK_LINUXX64_VERSION}" "${EZ_ROOT}/Workspace/shared/vulkan-sdk/" "${EZ_CONFIG_VULKAN_SDK_LINUXX64_VERSION}")
+					ez_download_and_extract("${EZ_CONFIG_DIRECTXSHADERCOMPILER_LINUXX64_URL}" "${CMAKE_BINARY_DIR}/vulkan-sdk" "vulkan-sdk-${EZ_CONFIG_DIRECTXSHADERCOMPILER_LINUXX64_VERSION}")
+					ez_create_link("${CMAKE_BINARY_DIR}/vulkan-sdk/${EZ_CONFIG_DIRECTXSHADERCOMPILER_LINUXX64_VERSION}" "${EZ_ROOT}/Workspace/shared/vulkan-sdk/" "${EZ_CONFIG_DIRECTXSHADERCOMPILER_LINUXX64_VERSION}")
 					set(EZ_VULKAN_DIR "${EZ_SHARED_VULKAN_DIR}" CACHE PATH "Directory of the Vulkan SDK" FORCE)
 
 					find_path(EZ_VULKAN_DIR config/vk_layer_settings.txt NO_DEFAULT_PATH
@@ -108,7 +108,7 @@ macro(ez_platformhook_find_vulkan)
 			endif()
 
 			if((EZ_VULKAN_DIR STREQUAL "EZ_VULKAN_DIR-NOTFOUND") OR (EZ_VULKAN_DIR STREQUAL ""))
-				message(FATAL_ERROR "Failed to find vulkan SDK. Ez requires the vulkan sdk ${EZ_CONFIG_VULKAN_SDK_LINUXX64_VERSION}. Please set the environment variable VULKAN_SDK to the vulkan sdk location.")
+				message(FATAL_ERROR "Failed to find vulkan SDK. Ez requires the vulkan sdk ${EZ_CONFIG_DIRECTXSHADERCOMPILER_LINUXX64_VERSION}. Please set the environment variable VULKAN_SDK to the vulkan sdk location.")
 			endif()
 		endif()
 	else()
