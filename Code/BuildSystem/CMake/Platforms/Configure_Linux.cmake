@@ -118,9 +118,8 @@ endmacro()
 
 macro(ez_platformhook_find_vulkan)
     if(EZ_CMAKE_ARCHITECTURE_64BIT)
-        message(STATUS "AAAA `${EZ_DXC_DIR}`")
         if(NOT EZ_DXC_DIR OR (EZ_DXC_DIR STREQUAL "EZ_DXC_DIR-NOTFOUND") OR(EZ_DXC_DIR STREQUAL ""))
-            message(STATUS "AAA BBB")
+
             #set(CMAKE_FIND_DEBUG_MODE TRUE)
             unset(EZ_DXC_DIR CACHE)
             set(EZ_SHARED_DXC_DIR "${EZ_ROOT}/Workspace/shared/DXC/${EZ_CONFIG_DIRECTXSHADERCOMPILER_LINUXX64_VERSION}")
@@ -129,8 +128,6 @@ macro(ez_platformhook_find_vulkan)
                 ${EZ_SHARED_DXC_DIR}
                 ${EZ_DXC_DIR}
             )
-            message(STATUS "BBBB ${EZ_DXC_DIR}")
-            message(STATUS "CCCC ${EZ_SHARED_DXC_DIR}")
             if(EZ_CMAKE_ARCHITECTURE_X86)
                 if((EZ_DXC_DIR STREQUAL "EZ_DXC_DIR-NOTFOUND") OR (EZ_DXC_DIR STREQUAL ""))
                     # To prevent race-conditions if two CMake presets are updated at the same time, we download into the local workspace and then create a link into the shared directory.
@@ -163,7 +160,7 @@ macro(ez_platformhook_find_vulkan)
 		#add_library(EzVulkan::Loader SHARED IMPORTED)
 		#set_target_properties(EzVulkan::Loader PROPERTIES IMPORTED_LOCATION "${EZ_DXC_DIR}/x86_64/lib/libvulkan.so")
 		#set_target_properties(EzVulkan::Loader PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${EZ_DXC_DIR}/x86_64/include")
-        message(STATUS "XXXXXXXXX ADD LIBRARY ${EZ_DXC_DIR}")
+        
 		add_library(EzVulkan::DXC SHARED IMPORTED)
 		set_target_properties(EzVulkan::DXC PROPERTIES IMPORTED_LOCATION "${EZ_DXC_DIR}/lib/libdxcompiler.so")
 		set_target_properties(EzVulkan::DXC PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${EZ_DXC_DIR}/include")

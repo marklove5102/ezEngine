@@ -74,16 +74,34 @@ endmacro()
 
 macro(ez_platformhook_find_vulkan)
     if(EZ_CMAKE_ARCHITECTURE_64BIT)
-        if((EZ_VULKAN_DIR STREQUAL "EZ_VULKAN_DIR-NOTFOUND") OR(EZ_VULKAN_DIR STREQUAL ""))
-            # set(CMAKE_FIND_DEBUG_MODE TRUE)
-            unset(EZ_VULKAN_DIR CACHE)
-            unset(EzVulkan_DIR CACHE)
-            find_path(EZ_VULKAN_DIR Config/vk_layer_settings.txt
+        if(NOT EZ_DXC_DIR OR (EZ_DXC_DIR STREQUAL "EZ_DXC_DIR-NOTFOUND") OR(EZ_DXC_DIR STREQUAL ""))
+
+            #set(CMAKE_FIND_DEBUG_MODE TRUE)
+            unset(EZ_DXC_DIR CACHE)
+            set(EZ_SHARED_DXC_DIR "${EZ_ROOT}/Workspace/shared/DXC/${EZ_CONFIG_DIRECTXSHADERCOMPILER_WINX64_VERSION}")
+            find_path(EZ_DXC_DIR include/dxc/dxcapi.h NO_DEFAULT_PATH
                 PATHS
-                ${EZ_VULKAN_DIR}
-                $ENV{VULKAN_SDK}
-                REQUIRED
+                ${EZ_SHARED_DXC_DIR}
+                ${EZ_DXC_DIR}
             )
+            if(EZ_CMAKE_ARCHITECTURE_X86)
+                if((EZ_DXC_DIR STREQUAL "EZ_DXC_DIR-NOTFOUND") OR (EZ_DXC_DIR STREQUAL ""))
+                    # To prevent race-conditions if two CMake presets are updated at the same time, we download into the local workspace and then create a link into the shared directory.
+                    ez_download_and_extract("${EZ_CONFIG_DIRECTXSHADERCOMPILER_WINX64_URL}" "${CMAKE_BINARY_DIR}/DXC/${EZ_CONFIG_DIRECTXSHADERCOMPILER_WINX64_VERSION}" "DXC-${EZ_CONFIG_DIRECTXSHADERCOMPILER_WINX64_VERSION}")
+                    ez_create_link("${CMAKE_BINARY_DIR}/DXC/${EZ_CONFIG_DIRECTXSHADERCOMPILER_WINX64_VERSION}" "${EZ_ROOT}/Workspace/shared/DXC/" "${EZ_CONFIG_DIRECTXSHADERCOMPILER_WINX64_VERSION}")
+                    set(EZ_DXC_DIR "${EZ_SHARED_DXC_DIR}" CACHE PATH "Directory of the Vulkan SDK" FORCE)
+
+                    find_path(EZ_DXC_DIR include/dxc/dxcapi.h NO_DEFAULT_PATH
+                        PATHS
+                        ${EZ_DXC_DIR}
+                        $ENV{VULKAN_SDK}
+                    )
+                endif()
+            endif()
+
+            if((EZ_DXC_DIR STREQUAL "EZ_DXC_DIR-NOTFOUND") OR (EZ_DXC_DIR STREQUAL ""))
+                message(FATAL_ERROR "Failed to download DXC, the DirectX Shader Compiler.")
+            endif()
 
             # set(CMAKE_FIND_DEBUG_MODE FALSE)
         endif()
@@ -92,18 +110,18 @@ macro(ez_platformhook_find_vulkan)
     endif()
 
     include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(EzVulkan DEFAULT_MSG EZ_VULKAN_DIR)
+    find_package_handle_standard_args(EzVulkan DEFAULT_MSG EZ_DXC_DIR)
 
     if(EZVULKAN_FOUND)
         if(EZ_CMAKE_ARCHITECTURE_64BIT)
-            add_library(EzVulkan::Loader STATIC IMPORTED)
-            set_target_properties(EzVulkan::Loader PROPERTIES IMPORTED_LOCATION "${EZ_VULKAN_DIR}/Lib/vulkan-1.lib")
-            set_target_properties(EzVulkan::Loader PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${EZ_VULKAN_DIR}/Include")
+            #add_library(EzVulkan::Loader STATIC IMPORTED)
+            #set_target_properties(EzVulkan::Loader PROPERTIES IMPORTED_LOCATION "${EZ_VULKAN_DIR}/Lib/vulkan-1.lib")
+            #set_target_properties(EzVulkan::Loader PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${EZ_VULKAN_DIR}/Include")
 
             add_library(EzVulkan::DXC SHARED IMPORTED)
-            set_target_properties(EzVulkan::DXC PROPERTIES IMPORTED_LOCATION "${EZ_VULKAN_DIR}/Bin/dxcompiler.dll")
-            set_target_properties(EzVulkan::DXC PROPERTIES IMPORTED_IMPLIB "${EZ_VULKAN_DIR}/Lib/dxcompiler.lib")
-            set_target_properties(EzVulkan::DXC PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${EZ_VULKAN_DIR}/Include")
+            set_target_properties(EzVulkan::DXC PROPERTIES IMPORTED_LOCATION "${EZ_DXC_DIR}/bin/x64/dxcompiler.dll")
+            set_target_properties(EzVulkan::DXC PROPERTIES IMPORTED_IMPLIB "${EZ_DXC_DIR}/lib/x64/dxcompiler.lib")
+            set_target_properties(EzVulkan::DXC PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${EZ_DXC_DIR}/inc")
         else()
             message(FATAL_ERROR "TODO: Vulkan is not yet supported on this platform and/or architecture.")
         endif()
