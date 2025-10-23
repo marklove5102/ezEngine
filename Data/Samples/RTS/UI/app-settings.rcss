@@ -27,7 +27,7 @@ body.app-settings
   height: 80vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
 
   decorator: tiled-box(
     window-tl, window-t, window-tr,

@@ -138,6 +138,26 @@ input
                       Option 1
                     </td>
                   </tr>
+
+                <tr>
+                  <td>Image (PNG)</td>
+                  <td>
+                    <img src="ez.png" />
+                  </td>
+                  <td>
+                    Raster image format
+                  </td>
+                </tr>
+                <tr>
+                  <td>Image (SVG)</td>
+                  <td>
+                    <svg src="ez.svg" />
+                  </td>
+                  <td>
+                    Vector image format
+                  </td>
+                </tr>
+
                 </tbody>
               </table>
             </form>
