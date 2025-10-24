@@ -20,6 +20,9 @@ using ezSkeletonResourceHandle = ezTypedResourceHandle<class ezSkeletonResource>
 
 EZ_DEFINE_AS_POD_TYPE(ozz::math::SimdFloat4);
 
+/// Data passed through bone weight output pins.
+///
+/// Contains per-bone weight information used for animation blending.
 struct ezAnimGraphPinDataBoneWeights
 {
   ezUInt16 m_uiOwnIndex = 0xFFFF;
@@ -27,6 +30,9 @@ struct ezAnimGraphPinDataBoneWeights
   const ezAnimGraphSharedBoneWeights* m_pSharedBoneWeights = nullptr;
 };
 
+/// Data passed through local pose output pins.
+///
+/// Contains local-space bone transforms and optional bone weights for blending.
 struct ezAnimGraphPinDataLocalTransforms
 {
   ezUInt16 m_uiOwnIndex = 0xFFFF;
@@ -37,6 +43,9 @@ struct ezAnimGraphPinDataLocalTransforms
   bool m_bUseRootMotion = false;
 };
 
+/// Data passed through model pose output pins.
+///
+/// Contains model-space bone transforms and optional root motion data.
 struct ezAnimGraphPinDataModelTransforms
 {
   ezUInt16 m_uiOwnIndex = 0xFFFF;
@@ -48,6 +57,16 @@ struct ezAnimGraphPinDataModelTransforms
   bool m_bUseRootMotion = false;
 };
 
+/// Controls animation playback for an animated entity using animation graphs.
+///
+/// The controller uses one or more animation graph instances and an ezAnimPoseGenerator.
+/// It evaluates the graphs each time it is updated (usually each frame) and generates the final
+/// skeletal pose. It also calculates root motion and may hold a blackboard for
+/// sharing data between animation graph nodes.
+///
+/// Animation clips use a mapping from name to resource, which the ezAnimController holds.
+/// This allows to reuse the same animation graphs (and thus logic) on different creatures,
+/// with different sets of animations.
 class EZ_RENDERERCORE_DLL ezAnimController
 {
   EZ_DISALLOW_COPY_AND_ASSIGN(ezAnimController);
@@ -56,16 +75,27 @@ public:
   ezAnimController();
   ~ezAnimController();
 
+  /// Initializes the controller with a skeleton and pose generator.
+  ///
+  /// The blackboard is used to share data between animation graph nodes (e.g., movement speed, state flags).
   void Initialize(const ezSkeletonResourceHandle& hSkeleton, ezAnimPoseGenerator& ref_poseGenerator, const ezSharedPtr<ezBlackboard>& pBlackboard = nullptr);
 
+  /// Updates and generates the final pose. It can be retrieved through the ezAnimPoseGenerator.
+  ///
+  /// Returns true if animation continues, false if it was stopped indefinitely, either due to an error or because some other system took over (usually a ragdoll).
   bool Update(ezTime diff, ezGameObject* pTarget, bool bEnableIK);
 
+  /// Retrieves the accumulated root motion for this frame.
   void GetRootMotion(ezVec3& ref_vTranslation, ezAngle& ref_rotationX, ezAngle& ref_rotationY, ezAngle& ref_rotationZ) const;
 
   const ezSharedPtr<ezBlackboard>& GetBlackboard() { return m_pBlackboard; }
 
   ezAnimPoseGenerator& GetPoseGenerator() { return *m_pPoseGenerator; }
 
+  /// Creates shared bone weights that can be reused across multiple animation controllers.
+  ///
+  /// The fill delegate is called to initialize the bone weights. If bone weights with the same
+  /// name already exist, they are reused.
   static ezSharedPtr<ezAnimGraphSharedBoneWeights> CreateBoneWeights(const char* szUniqueName, const ezSkeletonResource& skeleton, ezDelegate<void(ezAnimGraphSharedBoneWeights&)> fill);
 
   void SetOutputModelTransform(ezAnimGraphPinDataModelTransforms* pModelTransform);
@@ -77,14 +107,18 @@ public:
   ezAnimGraphPinDataLocalTransforms* AddPinDataLocalTransforms();
   ezAnimGraphPinDataModelTransforms* AddPinDataModelTransforms();
 
+  /// Adds an animation graph to be evaluated by this controller.
+  ///
+  /// Multiple graphs can be active simultaneously and their outputs will be combined.
   void AddAnimGraph(const ezAnimGraphResourceHandle& hGraph);
-  // TODO void RemoveAnimGraph(const ezAnimGraphResource& hGraph);
 
+  /// Maps a clip name to an actual animation clip resource.
   struct AnimClipInfo
   {
     ezAnimationClipResourceHandle m_hClip;
   };
 
+  /// Returns the animation clip info for the given clip name.
   const AnimClipInfo& GetAnimationClipInfo(ezTempHashedString sClipName) const;
 
   /// Sets which animation clip is used for the named animation.

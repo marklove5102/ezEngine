@@ -60,4 +60,3 @@ protected:
   virtual void Step(ezAnimController& ref_controller, ezAnimGraphInstance& ref_graph, ezTime tDiff, const ezSkeletonResource* pSkeleton, ezGameObject* pTarget) const = 0;
   virtual bool GetInstanceDataDesc(ezInstanceDataDesc& out_desc) const { return false; }
 };
-

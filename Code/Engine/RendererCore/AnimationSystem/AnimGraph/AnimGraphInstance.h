@@ -11,6 +11,12 @@ class ezGameObject;
 class ezAnimGraph;
 class ezAnimController;
 
+/// Runtime instance of an animation graph that evaluates it for a specific entity.
+///
+/// Each animated entity needs its own graph instance to maintain state (playback position,
+/// blend weights, etc.). The instance references a shared ezAnimGraph and allocates instance
+/// data for all nodes based on the graph's instance data allocator.
+/// Call Configure() to bind it to a graph, then Update() each frame to evaluate the graph.
 class EZ_RENDERERCORE_DLL ezAnimGraphInstance
 {
   EZ_DISALLOW_COPY_AND_ASSIGN(ezAnimGraphInstance);
@@ -19,10 +25,17 @@ public:
   ezAnimGraphInstance();
   ~ezAnimGraphInstance();
 
+  /// Binds this instance to an animation graph and allocates per-node instance data.
+  ///
+  /// The graph must have been prepared via PrepareForUse() before configuring instances.
   void Configure(const ezAnimGraph& animGraph);
 
+  /// Updates the animation graph for one frame, evaluating all nodes and generating the pose.
   void Update(ezAnimController& ref_controller, ezTime diff, ezGameObject* pTarget, const ezSkeletonResource* pSekeltonResource);
 
+  /// Returns the instance data for a specific node.
+  ///
+  /// Node instance data stores per-instance state like animation playback positions or blend factors.
   template <typename T>
   T* GetAnimNodeInstanceData(const ezAnimGraphNode& node)
   {

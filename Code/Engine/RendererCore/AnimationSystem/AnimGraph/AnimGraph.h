@@ -7,6 +7,12 @@
 #include <Foundation/Types/UniquePtr.h>
 #include <RendererCore/AnimationSystem/AnimGraph/AnimGraphNode.h>
 
+/// Defines an animation graph with nodes and connections.
+///
+/// An animation graph is a node-based system for procedural animation blending and control.
+/// Nodes represent operations like sampling animation clips, blending or switching poses.
+/// The graph is prepared once via PrepareForUse() which validates connections and optimizes the graph.
+/// Multiple ezAnimGraphInstance objects can share the same graph to evaluate it for different entities.
 class EZ_RENDERERCORE_DLL ezAnimGraph
 {
   EZ_DISALLOW_COPY_AND_ASSIGN(ezAnimGraph);
@@ -17,7 +23,10 @@ public:
 
   void Clear();
 
+  /// Adds a node to the graph and returns a pointer to it.
   ezAnimGraphNode* AddNode(ezUniquePtr<ezAnimGraphNode>&& pNode);
+
+  /// Creates a connection from a source node's output pin to a destination node's input pin.
   void AddConnection(const ezAnimGraphNode* pSrcNode, ezStringView sSrcPinName, ezAnimGraphNode* pDstNode, ezStringView sDstPinName);
 
   ezResult Serialize(ezStreamWriter& inout_stream) const;
@@ -26,6 +35,9 @@ public:
   const ezInstanceDataAllocator& GetInstanceDataAlloator() const { return m_InstanceDataAllocator; }
   ezArrayPtr<const ezUniquePtr<ezAnimGraphNode>> GetNodes() const { return m_Nodes; }
 
+  /// Prepares the graph for evaluation by sorting nodes, validating connections, and allocating instance data.
+  ///
+  /// Must be called after all nodes and connections have been added and before creating instances.
   void PrepareForUse();
 
 private:
